@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Listing Description Generator | The Jim Geracie Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a2332;
+  --navy-light: #243044;
+  --slate: #2d3a4a;
+  --gold: #c9a84c;
+  --gold-light: #dfc06e;
+  --gold-dim: rgba(201,168,76,0.15);
+  --cream: #f5f0e8;
+  --white: #ffffff;
+  --gray-300: #b0b8c4;
+  --gray-500: #6b7a8d;
+  --success: #4caf50;
+  --radius: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--navy);
+  color: var(--cream);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.top-bar {
+  background: var(--navy-light);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-bar .brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-bar .brand-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--navy);
+}
+
+.top-bar .brand-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.top-bar .brand-sub {
+  font-size: 11px;
+  color: var(--gray-500);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.badge {
+  background: var(--gold-dim);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.hero h1 span {
+  color: var(--gold);
+}
+
+.hero p {
+  font-size: 17px;
+  color: var(--gray-300);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--navy-light);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header .icon {
+  width: 32px;
+  height: 32px;
+  background: var(--gold-dim);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 16px;
+}
+
+.card-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--gray-300);
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--slate);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.form-group select option {
+  background: var(--slate);
+  color: var(--cream);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.tag {
+  padding: 6px 12px;
+  background: var(--slate);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--gray-300);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.tag:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.tag.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.btn-generate {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  border-radius: 6px;
+  color: var(--navy);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 8px;
+}
+
+.btn-generate:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+}
+
+.btn-generate:active {
+  transform: translateY(0);
+}
+
+.btn-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.output-area {
+  min-height: 300px;
+  position: relative;
+}
+
+.output-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  color: var(--gray-500);
+}
+
+.output-placeholder .big-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.output-placeholder p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.output-text {
+  display: none;
+}
+
+.output-text.visible {
+  display: block;
+}
+
+.output-text .description {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--cream);
+  white-space: pre-wrap;
+}
+
+.output-text .description .headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.output-actions {
+  display: none;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+
+.output-actions.visible {
+  display: flex;
+}
+
+.btn-action {
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid rgba(201,168,76,0.3);
+  background: transparent;
+  color: var(--gold);
+}
+
+.btn-action:hover {
+  background: var(--gold-dim);
+}
+
+.btn-action.primary {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+
+.btn-action.primary:hover {
+  background: var(--gold-light);
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--success);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 100;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  background: var(--gold);
+  animation: blink 0.8s infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.style-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.style-btn {
+  flex: 1;
+  padding: 10px 8px;
+  background: var(--slate);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 6px;
+  color: var(--gray-300);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.style-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.style-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.word-count {
+  font-size: 12px;
+  color: var(--gray-500);
+  text-align: right;
+  margin-top: 8px;
+}
+
+.powered-by {
+  text-align: center;
+  margin-top: 48px;
+  padding: 24px;
+  color: var(--gray-500);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.powered-by a {
+  color: var(--gold);
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand">
+    <div class="brand-icon">JG</div>
+    <div>
+      <div class="brand-text">The Jim Geracie Team</div>
+      <div class="brand-sub">Realty Executives Integrity</div>
+    </div>
+  </div>
+  <div class="badge">AI-Powered Tools</div>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h1>AI Listing <span>Description Generator</span></h1>
+    <p>Enter property details below and generate a polished, MLS-ready listing description in seconds.</p>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <div class="card-header">
+        <div class="icon">&#9998;</div>
+        <h2>Property Details</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Street Address</label>
+          <input type="text" id="address" placeholder="e.g. 2100 S Cherrywood Ct">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="city" placeholder="e.g. New Berlin">
+          </div>
+          <div class="form-group">
+            <label>ZIP Code</label>
+            <input type="text" id="zip" placeholder="e.g. 53151">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Property Type</label>
+          <select id="propType">
+            <option value="">Select type...</option>
+            <option value="single-family">Single Family Home</option>
+            <option value="condo">Condo / Townhome</option>
+            <option value="multi-family">Multi-Family</option>
+            <option value="ranch">Ranch</option>
+            <option value="colonial">Colonial</option>
+            <option value="cape-cod">Cape Cod</option>
+            <option value="contemporary">Contemporary</option>
+            <option value="luxury">Luxury Estate</option>
+            <option value="lakefront">Lakefront Property</option>
+            <option value="land">Vacant Land</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Listing Price</label>
+          <input type="text" id="price" placeholder="e.g. 725000">
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Beds</label>
+            <input type="number" id="beds" min="0" max="20" placeholder="4">
+          </div>
+          <div class="form-group">
+            <label>Baths</label>
+            <input type="text" id="baths" placeholder="2.5">
+          </div>
+          <div class="form-group">
+            <label>Sq Ft</label>
+            <input type="number" id="sqft" min="0" placeholder="2934">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Year Built</label>
+            <input type="number" id="yearBuilt" placeholder="1998">
+          </div>
+          <div class="form-group">
+            <label>Lot Size</label>
+            <input type="text" id="lotSize" placeholder="e.g. 0.45 acres">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Garage</label>
+            <select id="garage">
+              <option value="">Select...</option>
+              <option value="1-attached">1-Car Attached</option>
+              <option value="2-attached">2-Car Attached</option>
+              <option value="3-attached">3-Car Attached</option>
+              <option value="1-detached">1-Car Detached</option>
+              <option value="2-detached">2-Car Detached</option>
+              <option value="none">No Garage</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Basement</label>
+            <select id="basement">
+              <option value="">Select...</option>
+              <option value="full-finished">Full Finished</option>
+              <option value="partial-finished">Partially Finished</option>
+              <option value="unfinished">Unfinished</option>
+              <option value="walkout">Walk-Out</option>
+              <option value="none">No Basement</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Key Features (click to select)</label>
+          <div class="tags-container" id="featureTags">
+            <span class="tag" data-val="Updated Kitchen">Updated Kitchen</span>
+            <span class="tag" data-val="Hardwood Floors">Hardwood Floors</span>
+            <span class="tag" data-val="Open Floor Plan">Open Floor Plan</span>
+            <span class="tag" data-val="Primary Suite">Primary Suite</span>
+            <span class="tag" data-val="New Roof">New Roof</span>
+            <span class="tag" data-val="Central Air">Central Air</span>
+            <span class="tag" data-val="Fireplace">Fireplace</span>
+            <span class="tag" data-val="Deck/Patio">Deck/Patio</span>
+            <span class="tag" data-val="Fenced Yard">Fenced Yard</span>
+            <span class="tag" data-val="Lake Views">Lake Views</span>
+            <span class="tag" data-val="Pool">Pool</span>
+            <span class="tag" data-val="New Windows">New Windows</span>
+            <span class="tag" data-val="Smart Home">Smart Home</span>
+            <span class="tag" data-val="Move-In Ready">Move-In Ready</span>
+            <span class="tag" data-val="Stainless Appliances">Stainless Appliances</span>
+            <span class="tag" data-val="Granite Counters">Granite/Quartz Counters</span>
+            <span class="tag" data-val="Walk-In Closets">Walk-In Closets</span>
+            <span class="tag" data-val="First Floor Laundry">First Floor Laundry</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Additional Notes (optional)</label>
+          <textarea id="notes" rows="3" placeholder="Anything special? Recent renovations, neighborhood perks, school district, etc."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Description Style</label>
+          <div class="style-selector">
+            <div class="style-btn active" data-style="professional" onclick="setStyle(this)">Professional</div>
+            <div class="style-btn" data-style="luxury" onclick="setStyle(this)">Luxury</div>
+            <div class="style-btn" data-style="warm" onclick="setStyle(this)">Warm &amp; Inviting</div>
+          </div>
+        </div>
+
+        <button class="btn-generate" id="generateBtn" onclick="generateDescription()">
+          Generate Listing Description
+        </button>
+      </div>
+    </div>
+
+    <div class="card" style="position: sticky; top: 20px;">
+      <div class="card-header">
+        <div class="icon">&#9733;</div>
+        <h2>Generated Description</h2>
+      </div>
+      <div class="card-body">
+        <div class="output-area">
+          <div class="output-placeholder" id="placeholder">
+            <div class="big-icon">&#127968;</div>
+            <p>Your AI-generated listing description<br>will appear here.</p>
+          </div>
+          <div class="output-text" id="outputText">
+            <div class="description" id="descriptionContent"></div>
+            <div class="word-count" id="wordCount"></div>
+          </div>
+        </div>
+        <div class="output-actions" id="outputActions">
+          <button class="btn-action primary" onclick="copyToClipboard()">Copy to Clipboard</button>
+          <button class="btn-action" onclick="regenerate()">Regenerate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="powered-by">
+    Built for The Jim Geracie Team by <a href="https://moltmind.github.io" target="_blank">MoltMind AI</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+let selectedFeatures = [];
+let currentStyle = 'professional';
+
+document.querySelectorAll('.tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    tag.classList.toggle('active');
+    const val = tag.dataset.val;
+    if (tag.classList.contains('active')) {
+      selectedFeatures.push(val);
+    } else {
+      selectedFeatures = selectedFeatures.filter(f => f !== val);
+    }
+  });
+});
+
+function setStyle(el) {
+  document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentStyle = el.dataset.style;
+}
+
+function formatPrice(val) {
+  const num = parseInt(val.replace(/[^0-9]/g, ''));
+  if (isNaN(num)) return val;
+  return '$' + num.toLocaleString();
+}
+
+function generateDescription() {
+  const addr = document.getElementById('address').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const zip = document.getElementById('zip').value.trim();
+  const propType = document.getElementById('propType').value;
+  const price = document.getElementById('price').value.trim();
+  const beds = document.getElementById('beds').value;
+  const baths = document.getElementById('baths').value;
+  const sqft = document.getElementById('sqft').value;
+  const yearBuilt = document.getElementById('yearBuilt').value;
+  const lotSize = document.getElementById('lotSize').value.trim();
+  const garage = document.getElementById('garage').value;
+  const basement = document.getElementById('basement').value;
+  const notes = document.getElementById('notes').value.trim();
+
+  if (!addr || !city || !beds || !baths || !sqft) {
+    alert('Please fill in at least the address, city, beds, baths, and square footage.');
+    return;
+  }
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  const desc = buildDescription({
+    addr, city, zip, propType, price, beds, baths, sqft,
+    yearBuilt, lotSize, garage, basement, notes,
+    features: selectedFeatures, style: currentStyle
+  });
+
+  // Simulate typing effect
+  document.getElementById('placeholder').style.display = 'none';
+  const outputText = document.getElementById('outputText');
+  const content = document.getElementById('descriptionContent');
+  outputText.classList.add('visible');
+  content.innerHTML = '';
+
+  typeText(desc, content, () => {
+    btn.disabled = false;
+    btn.textContent = 'Generate Listing Description';
+    document.getElementById('outputActions').classList.add('visible');
+    const words = desc.replace(/<[^>]*>/g, '').split(/\s+/).length;
+    document.getElementById('wordCount').textContent = words + ' words';
+  });
+}
+
+function typeText(html, el, callback) {
+  // Parse the HTML to extract text segments
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  const fullText = temp.textContent;
+
+  let i = 0;
+  const speed = 8;
+  el.innerHTML = html;
+  el.style.clipPath = 'inset(0 100% 0 0)';
+
+  // Animate reveal
+  const duration = Math.min(fullText.length * speed, 3000);
+  const start = performance.now();
+
+  function animate(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.style.clipPath = `inset(0 ${(1 - eased) * 100}% 0 0)`;
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      el.style.clipPath = 'none';
+      callback();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function buildDescription(d) {
+  const propNames = {
+    'single-family': 'single-family home',
+    'condo': 'condo',
+    'multi-family': 'multi-family property',
+    'ranch': 'ranch-style home',
+    'colonial': 'colonial home',
+    'cape-cod': 'Cape Cod home',
+    'contemporary': 'contemporary home',
+    'luxury': 'luxury estate',
+    'lakefront': 'lakefront property',
+    'land': 'parcel of land'
+  };
+
+  const propName = propNames[d.propType] || 'home';
+  const priceStr = d.price ? formatPrice(d.price) : '';
+  const fullAddr = d.addr + ', ' + d.city + (d.zip ? ', WI ' + d.zip : ', WI');
+  const age = d.yearBuilt ? (2026 - parseInt(d.yearBuilt)) : null;
+
+  // Openers by style
+  const openers = {
+    professional: [
+      `Welcome to ${d.addr}! This well-maintained ${d.beds}-bedroom, ${d.baths}-bathroom ${propName} offers ${parseInt(d.sqft).toLocaleString()} square feet of thoughtfully designed living space in the heart of ${d.city}.`,
+      `Don't miss this exceptional ${d.beds}-bedroom ${propName} located at ${d.addr} in desirable ${d.city}. With ${parseInt(d.sqft).toLocaleString()} sq ft of living space, this home delivers both comfort and value.`,
+      `Presenting ${d.addr} - a ${d.beds} bed, ${d.baths} bath ${propName} offering ${parseInt(d.sqft).toLocaleString()} square feet of quality living in ${d.city}. This home checks all the boxes for today's discerning buyer.`
+    ],
+    luxury: [
+      `Discover refined living at ${d.addr}. This stunning ${d.beds}-bedroom, ${d.baths}-bathroom ${propName} showcases ${parseInt(d.sqft).toLocaleString()} square feet of sophisticated design in one of ${d.city}'s most coveted locations.`,
+      `An extraordinary opportunity awaits at ${d.addr}. This exquisite ${propName} spans ${parseInt(d.sqft).toLocaleString()} square feet across ${d.beds} bedrooms and ${d.baths} baths, setting a new standard for elegant living in ${d.city}.`,
+      `Elegance meets comfort at ${d.addr}. This magnificent ${d.beds}-bedroom ${propName} in ${d.city} presents ${parseInt(d.sqft).toLocaleString()} sq ft of luxury designed for those who appreciate the finer things.`
+    ],
+    warm: [
+      `Welcome home to ${d.addr}! This charming ${d.beds}-bedroom, ${d.baths}-bathroom ${propName} in ${d.city} offers ${parseInt(d.sqft).toLocaleString()} square feet where memories are waiting to be made.`,
+      `There's something special about ${d.addr}. This inviting ${d.beds}-bed, ${d.baths}-bath ${propName} wraps you in ${parseInt(d.sqft).toLocaleString()} sq ft of warmth and comfort in beautiful ${d.city}.`,
+      `Picture yourself coming home to ${d.addr}. This lovingly cared-for ${propName} in ${d.city} features ${d.beds} bedrooms, ${d.baths} baths, and ${parseInt(d.sqft).toLocaleString()} sq ft of space your family will love.`
+    ]
+  };
+
+  const opener = openers[d.style][Math.floor(Math.random() * 3)];
+
+  // Feature paragraphs
+  let featureParas = [];
+
+  // Kitchen/interior features
+  const kitchenFeats = d.features.filter(f =>
+    ['Updated Kitchen', 'Stainless Appliances', 'Granite Counters', 'Open Floor Plan', 'Hardwood Floors'].includes(f)
+  );
+  if (kitchenFeats.length > 0) {
+    const kitchenPhrases = {
+      professional: {
+        'Updated Kitchen': 'a beautifully updated kitchen',
+        'Stainless Appliances': 'stainless steel appliances',
+        'Granite Counters': 'granite countertops',
+        'Open Floor Plan': 'The open floor plan creates seamless flow between living spaces, perfect for everyday living and entertaining.',
+        'Hardwood Floors': 'gleaming hardwood floors throughout'
+      },
+      luxury: {
+        'Updated Kitchen': 'a gourmet chef\'s kitchen',
+        'Stainless Appliances': 'premium stainless steel appliances',
+        'Granite Counters': 'exquisite granite or quartz countertops',
+        'Open Floor Plan': 'The expansive open concept design creates a grand entertaining experience, seamlessly connecting the living, dining, and kitchen areas.',
+        'Hardwood Floors': 'rich hardwood flooring extending throughout'
+      },
+      warm: {
+        'Updated Kitchen': 'a gorgeous kitchen where family meals come together',
+        'Stainless Appliances': 'modern stainless steel appliances',
+        'Granite Counters': 'beautiful granite counters',
+        'Open Floor Plan': 'The welcoming open layout means you\'re always connected to family, whether cooking dinner or relaxing in the living room.',
+        'Hardwood Floors': 'warm hardwood floors that give every room character'
+      }
+    };
+
+    let kitchenItems = kitchenFeats.filter(f => f !== 'Open Floor Plan').map(f => kitchenPhrases[d.style][f]);
+    let para = '';
+    if (kitchenItems.length > 0) {
+      para = `Inside you'll find ${kitchenItems.join(', ')}.`;
+    }
+    const openPlan = kitchenFeats.find(f => f === 'Open Floor Plan');
+    if (openPlan) {
+      para += ' ' + kitchenPhrases[d.style]['Open Floor Plan'];
+    }
+    if (para.trim()) featureParas.push(para.trim());
+  }
+
+  // Suite/rooms
+  const roomFeats = d.features.filter(f =>
+    ['Primary Suite', 'Walk-In Closets', 'First Floor Laundry', 'Fireplace'].includes(f)
+  );
+  if (roomFeats.length > 0) {
+    const phrases = {
+      professional: {
+        'Primary Suite': 'a spacious primary suite offering a private retreat',
+        'Walk-In Closets': 'generous walk-in closets',
+        'First Floor Laundry': 'convenient first-floor laundry',
+        'Fireplace': 'a cozy fireplace that anchors the living space'
+      },
+      luxury: {
+        'Primary Suite': 'a lavish primary suite that serves as your personal sanctuary',
+        'Walk-In Closets': 'custom walk-in closets',
+        'First Floor Laundry': 'a dedicated main-level laundry room',
+        'Fireplace': 'an elegant fireplace that commands the great room'
+      },
+      warm: {
+        'Primary Suite': 'a peaceful primary suite where you can unwind after a long day',
+        'Walk-In Closets': 'roomy walk-in closets with space to spare',
+        'First Floor Laundry': 'first-floor laundry that makes life easier',
+        'Fireplace': 'a warm fireplace perfect for cozy evenings'
+      }
+    };
+    const items = roomFeats.map(f => phrases[d.style][f]);
+    if (items.length === 1) {
+      featureParas.push(`The home features ${items[0]}.`);
+    } else {
+      featureParas.push(`Additional highlights include ${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}.`);
+    }
+  }
+
+  // Outdoor features
+  const outdoorFeats = d.features.filter(f =>
+    ['Deck/Patio', 'Fenced Yard', 'Lake Views', 'Pool'].includes(f)
+  );
+  if (outdoorFeats.length > 0) {
+    const phrases = {
+      professional: {
+        'Deck/Patio': 'a spacious deck or patio ideal for outdoor dining',
+        'Fenced Yard': 'a fully fenced yard providing privacy and security',
+        'Lake Views': 'breathtaking lake views from multiple vantage points',
+        'Pool': 'a refreshing pool for summer enjoyment'
+      },
+      luxury: {
+        'Deck/Patio': 'an expansive outdoor living area designed for resort-style entertaining',
+        'Fenced Yard': 'a professionally landscaped, privately fenced grounds',
+        'Lake Views': 'sweeping, panoramic lake views that will take your breath away',
+        'Pool': 'a stunning pool and spa oasis'
+      },
+      warm: {
+        'Deck/Patio': 'a wonderful deck where summer barbecues and morning coffees happen',
+        'Fenced Yard': 'a secure fenced yard where kids and pets can play freely',
+        'Lake Views': 'gorgeous lake views you\'ll never get tired of',
+        'Pool': 'your very own backyard pool for family fun'
+      }
+    };
+    const items = outdoorFeats.map(f => phrases[d.style][f]);
+    const starters = {
+      professional: 'Step outside to enjoy',
+      luxury: 'The outdoor experience features',
+      warm: 'Outside is where this home really shines with'
+    };
+    featureParas.push(`${starters[d.style]} ${items.join(', ')}.`);
+  }
+
+  // Home systems
+  const systemFeats = d.features.filter(f =>
+    ['New Roof', 'Central Air', 'New Windows', 'Smart Home', 'Move-In Ready'].includes(f)
+  );
+  if (systemFeats.length > 0) {
+    const phrases = {
+      'New Roof': 'a newer roof',
+      'Central Air': 'central air conditioning',
+      'New Windows': 'updated windows',
+      'Smart Home': 'smart home technology',
+      'Move-In Ready': 'move-in ready condition'
+    };
+    const items = systemFeats.map(f => phrases[f]);
+    featureParas.push(`Practical updates include ${items.join(', ')} — giving buyers confidence and peace of mind.`);
+  }
+
+  // Garage & basement
+  let structParts = [];
+  if (d.garage && d.garage !== 'none') {
+    const gMap = {
+      '1-attached': 'a 1-car attached garage',
+      '2-attached': 'a 2-car attached garage',
+      '3-attached': 'a 3-car attached garage',
+      '1-detached': 'a 1-car detached garage',
+      '2-detached': 'a 2-car detached garage'
+    };
+    structParts.push(gMap[d.garage]);
+  }
+  if (d.basement && d.basement !== 'none') {
+    const bMap = {
+      'full-finished': 'a fully finished basement offering additional living space',
+      'partial-finished': 'a partially finished basement with expansion potential',
+      'unfinished': 'an unfinished basement ready for your vision',
+      'walkout': 'a walk-out basement adding versatile living options'
+    };
+    structParts.push(bMap[d.basement]);
+  }
+  if (structParts.length > 0) {
+    featureParas.push(`The property also includes ${structParts.join(' and ')}.`);
+  }
+
+  // Year built / lot
+  let detailParts = [];
+  if (age !== null && age > 0) {
+    if (age <= 5) detailParts.push('Built just ' + age + ' years ago, this home is practically new.');
+    else if (age <= 15) detailParts.push('Built in ' + d.yearBuilt + ', this well-cared-for home shows pride of ownership throughout.');
+    else detailParts.push('Built in ' + d.yearBuilt + ' and lovingly maintained, this home has stood the test of time.');
+  }
+  if (d.lotSize) {
+    detailParts.push(`Sitting on a ${d.lotSize} lot, there's plenty of room to enjoy the outdoors.`);
+  }
+  if (detailParts.length > 0) featureParas.push(detailParts.join(' '));
+
+  // Notes
+  if (d.notes) {
+    featureParas.push(d.notes);
+  }
+
+  // Closer
+  const closers = {
+    professional: [
+      `Located in ${d.city}, this property offers easy access to top-rated schools, shopping, dining, and major commuter routes. ${priceStr ? 'Listed at ' + priceStr + '. ' : ''}Schedule your private showing today with The Jim Geracie Team.`,
+      `${d.city} living at its finest. ${priceStr ? 'Offered at ' + priceStr + '. ' : ''}Contact The Jim Geracie Team at (262) 946-5097 to schedule your showing before this one is gone.`
+    ],
+    luxury: [
+      `This is ${d.city} living at its absolute best. ${priceStr ? 'Offered at ' + priceStr + '. ' : ''}For a private tour of this exceptional property, contact The Jim Geracie Team at (262) 946-5097.`,
+      `A rare opportunity in ${d.city} for the buyer who demands excellence. ${priceStr ? 'Presented at ' + priceStr + '. ' : ''}The Jim Geracie Team invites you to experience this home in person.`
+    ],
+    warm: [
+      `This isn't just a house — it's your next home. Located in the wonderful community of ${d.city}. ${priceStr ? 'Asking ' + priceStr + '. ' : ''}Call The Jim Geracie Team at (262) 946-5097 to come see it for yourself!`,
+      `${d.city} is a great place to call home, and this property is a great place to start. ${priceStr ? 'Priced at ' + priceStr + '. ' : ''}Reach out to The Jim Geracie Team to schedule your visit.`
+    ]
+  };
+
+  const closer = closers[d.style][Math.floor(Math.random() * 2)];
+
+  // Assemble headline
+  const headlines = {
+    professional: [
+      `${d.beds} Bed ${propName.charAt(0).toUpperCase() + propName.slice(1)} in ${d.city} — ${priceStr || 'Call for Price'}`,
+      `${priceStr || 'Prime'} ${propName.charAt(0).toUpperCase() + propName.slice(1)} at ${d.addr}, ${d.city}`
+    ],
+    luxury: [
+      `Exquisite ${d.beds}-Bedroom ${propName.charAt(0).toUpperCase() + propName.slice(1)} in ${d.city}`,
+      `${priceStr || 'Luxury'} — ${d.addr}, ${d.city}`
+    ],
+    warm: [
+      `Your Dream Home Awaits at ${d.addr}`,
+      `A Place to Call Home in ${d.city} — ${d.beds} Beds, ${d.baths} Baths`
+    ]
+  };
+
+  const headline = headlines[d.style][Math.floor(Math.random() * 2)];
+
+  // Final assembly
+  let result = `<div class="headline">${headline}</div>\n\n`;
+  result += opener + '\n\n';
+  result += featureParas.join('\n\n') + '\n\n';
+  result += closer;
+
+  return result;
+}
+
+function copyToClipboard() {
+  const el = document.getElementById('descriptionContent');
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied to clipboard!');
+  });
+}
+
+function regenerate() {
+  generateDescription();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+
+</body>
+</html>
